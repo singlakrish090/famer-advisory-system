@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🌱 Smart Crop Advisor System</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!---style.js--->
+    <script src="style.js"></script>
+
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        section {
+            padding: 50px 0;
+        }
+
+        .section-title {
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        footer a:hover {
+            transform: scale(1.15);
+            opacity: 0.9;
+        }
+
+        .hero {
+            background: url("https://img.freepik.com/premium-photo/indian-farmer-holding-crop-plant-his-wheat-field_54391-21.jpg?w=2000") center/cover no-repeat;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .hero-overlay {
+            background: rgba(0, 0, 0, 0.45);
+            padding: 30px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        .small-muted {
+            font-size: 0.9rem;
+            color: #eee;
+            opacity: 0.9;
+        }
+
+        .card h4 {
+            font-weight: 600;
+        }
+
+        .chart-wrap {
+            min-height: 240px;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">🌱 <span id="brandText">Smart Crop Advisory System</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#" id="navHome">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" id="navWeather">Weather</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" id="navCrops">Crops</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" id="navSchemes">Schemes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" id="navContact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero">
+        <div class="hero-overlay">
+            <h1 id="heroTitle" class="fw-bold">Smart Crop Advisory System</h1>
+            <p id="heroSubtitle">Empowering Farmers with Data, Technology & AI</p>
+            <a href="#register" class="btn btn-warning btn-lg mt-3" id="heroRegisterBtn">Register Now</a>
+        </div>
+    </header>
+
+    <!-- LANGUAGE SELECTOR -->
+    <div class="container mt-3 text-end">
+        <label for="langSelect" class="me-2 small text-muted">Language</label>
+        <select id="langSelect" class="form-select w-auto d-inline">
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="pa">ਪੰਜਾਬੀ</option>
+            <option value="bn">বাংলা</option>
+        </select>
+    </div>
+
+    <!-- MAIN: Registration -->
+    <section id="register" class="container">
+        <h2 class="text-center section-title" id="regTitle">👨🏻‍🌾 Farmer Registration</h2>
+        <div class="card shadow-sm p-4">
+            <form id="regForm">
+                <div class="row g-3">
+                    <div class="col-md-6"><input id="inpName" type="text" class="form-control" placeholder="Farmer Name"
+                            required>
+                    </div>
+                    <div class="col-md-6"><input id="inpMobile" type="text" class="form-control"
+                            placeholder="Mobile Number" required></div>
+                    <div class="col-md-6"><input id="inpEmail" type="email" class="form-control"
+                            placeholder="Email (optional)">
+                    </div>
+                    <div class="col-md-6"><input id="inpState" type="text" class="form-control"
+                            placeholder="State/District" required></div>
+                    <div class="col-md-6"><input id="inpVillage" type="text" class="form-control" placeholder="Village"
+                            required>
+                    </div>
+                    <div class="col-md-6"><input id="inpPin" type="number" class="form-control" placeholder="Pin Number"
+                            required>
+                    </div>
+                    <div class="col-md-6"><input id="inpArea" type="number" class="form-control"
+                            placeholder="Land area (in acres)" required></div>
+                    <div class="col-md-6"><input id="inpAadhar" type="number" class="form-control"
+                            placeholder="Aadhar Card Number" required></div>
+
+                    <div class="col-md-6">
+                        <select id="inpCrop" class="form-select">
+                            <option>Wheat</option>
+                            <option>Maize</option>
+                            <option>Rice</option>
+                            <option>Sugarcane</option>
+                            <option>Onion</option>
+                            <option>Tomato</option>
+                            <option>Mango</option>
+                            <option>Banana</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <select id="inpSoil" class="form-select">
+                            <option>Clayey Soil</option>
+                            <option>Loamy Soil</option>
+                            <option>Sandy Soil</option>
+                            <option>Alluvial Soil</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 text-center">
+                        <button id="regBtn" type="submit" class="btn btn-success px-4">Register</button>
+                        <div id="regMsg" class="mt-3"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!--farmer score-->
+
+    <head>
+        <title>Farmer Health Program</title>
+    </head>
+
+    <body>
+
+        <section class="container mt-5">
+            <h2 class="text-center">👨‍🌾 Farmer Health & Safety Check</h2>
+
+            <div class="card p-4 shadow">
+
+                <input type="number" id="age" class="form-control mb-2" placeholder="Enter Age">
+
+                <input type="number" id="bp" class="form-control mb-2" placeholder="Blood Pressure">
+
+                <input type="number" id="sugar" class="form-control mb-2" placeholder="Sugar Level">
+
+                <button onclick="checkHealth()" class="btn btn-success">
+                    Check Health
+                </button>
+
+                <p id="healthResult" class="mt-3 fw-bold"></p>
+
+            </div>
+        </section>
+
+        <script>
+            function checkHealth() {
+
+                let bp = document.getElementById("bp").value;
+                let sugar = document.getElementById("sugar").value;
+
+                let result = "";
+
+                if (bp > 140 || sugar > 180) {
+                    result = "⚠ Health Risk! Please visit a doctor.";
+                }
+                else {
+                    result = "✅ Health Status: Normal";
+                }
+
+                document.getElementById("healthResult").innerText = result;
+
+            }
+        </script>
+    </body>
+
+
+    <!-- FEATURES -->
+    <section class="container">
+        <h2 class="text-center section-title" id="featuresTitle">✨ Smart Features</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm h-100">
+                    <h4 id="weatherTitle">🌤 Weather Advisory</h4>
+
+                    <p id="weatherToday">Loading today's weather...</p>
+
+                    <p id="weatherTomorrow">Loading tomorrow forecast...</p>
+
+                    <p id="weatherAfter">Loading day-after forecast...</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm h-100">
+                    <h4 id="recCropTitle">🌽 Recommended Crops</h4>
+                    <h5 id="recCropName">Maize</h5>
+                    <ul id="recCropList">
+                        <li>Low Water Requirement</li>
+                        <li>High Yield</li>
+                        <li>Profitable in Punjab's Soil</li>
+                    </ul>
+                    <button id="knowMoreBtn" class="btn btn-success">Know More</button>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm h-100">
+                    <h4 id="diseaseTitle">🦠 Crop Disease Detection</h4>
+                    <input id="diseaseFile" type="file" class="form-control mb-2" accept="image/*">
+                    <input id="diseaseCrop" type="text" class="form-control mb-2" placeholder="Enter Crop Name">
+                    <button id="checkDiseaseBtn" class="btn btn-danger btn-sm">Check Disease</button>
+                    <p id="diseaseResult"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--live weather button-->
+
+    <body>
+
+        <script>
+
+            async function getWeather() {
+
+                const city = "Ludhiana";
+                const apiKey = "Y643f6015d9a3604590c221b3ce60f326";
+
+                const res = await fetch(
+                    `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`
+                );
+
+                const data = await res.json();
+
+                // Today
+                document.getElementById("weatherToday").innerHTML =
+                    `🌡 Temp: ${data.list[0].main.temp}°C | 💧 Humidity: ${data.list[0].main.humidity}%`;
+
+                // Tomorrow
+                document.getElementById("weatherTomorrow").innerHTML =
+                    `🌤 Temp: ${data.list[8].main.temp}°C | ☁ Weather: ${data.list[8].weather[0].description}`;
+
+                // Day After
+                document.getElementById("weatherAfter").innerHTML =
+                    `🌤 Temp: ${data.list[16].main.temp}°C | ☁ Weather: ${data.list[16].weather[0].description}`;
+
+            }
+
+            getWeather();
+
+        </script>
+
+    </body>
+
+
+    <!--know more button-->
+
+    <body>
+
+
+
+        <!-- JavaScript goes at the bottom of body -->
+        <script>
+
+            document.getElementById("knowMoreBtn").addEventListener("click", function () {
+
+                let crop = document.getElementById("recCropName").innerText;
+
+                let message = "";
+
+                if (crop === "Maize") {
+                    message = "🌽 Maize grows well in loamy soil and requires moderate rainfall.";
+                }
+
+                if (crop === "Wheat") {
+                    message = "🌾 Wheat grows best in cool climate with well-drained soil.";
+                }
+
+                if (crop === "Rice") {
+                    message = "🌾 Rice requires plenty of water and warm climate.";
+                }
+
+                alert(message);
+
+            });
+
+        </script>
+
+    </body>
+
+    <!--check disease button -->
+
+    <body>
+
+        <script>
+
+            document.getElementById("checkDiseaseBtn").addEventListener("click", function () {
+
+                let crop = document.getElementById("diseaseCrop").value.toLowerCase();
+
+                let result = "";
+
+                if (crop === "wheat") {
+                    result = "🦠 Possible Disease: Rust\n💊 Spray Fungicide";
+                }
+                else if (crop === "rice") {
+                    result = "🦠 Possible Disease: Blast Disease\n💊 Use Carbendazim";
+                }
+                else if (crop === "maize") {
+                    result = "🦠 Possible Disease: Leaf Blight\n💊 Use Mancozeb Spray";
+                }
+                else {
+                    result = "⚠ Crop not recognized. Please enter Wheat, Rice, or Maize.";
+                }
+
+                document.getElementById("diseaseResult").innerText = result;
+
+            });
+
+        </script>
+
+    </body>
+
+
+    <!-- FERTILIZERS & PESTICIDES -->
+    <section class="container">
+        <h2 class="text-center section-title" id="fertTitle">💊 Fertilizers & 🧪 Pesticides</h2>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card p-3 shadow-sm h-100">
+                    <h4 id="fertInfoTitle">💊 Fertilizers Info</h4>
+                    <ul id="fertList">
+                        <li>Urea – Growth booster</li>
+                        <li>DAP – For root strength</li>
+                        <li>Potash – Improves flowering & fruiting</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card p-3 shadow-sm h-100">
+                    <h4 id="pestInfoTitle">🧪 Pesticides Info</h4>
+                    <ul id="pestList">
+                        <li>Neem Oil – Natural pest control</li>
+                        <li>Monocrotophos – For sucking pests</li>
+                        <li>Carbendazim – For fungal diseases</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GOVT SCHEMES and here a button -->
+
+    <body>
+
+        <section class="container">
+
+            <h2 style="font-weight: bold;text-align: center;">🏛 Government Schemes</h2>
+
+            <div class="card">
+
+                <ul id="schemeList">
+                    <li>PM-Kisan Samman Nidhi Yojana</li>
+                    <li>Soil Health Card Scheme</li>
+                    <li>Crop Insurance (PMFBY)</li>
+                    <li>Fasal Bima Yojana</li>
+                </ul>
+
+                <button id="exploreSchemesBtn" class="btn btn-success">Explore More</button>
+
+            </div>
+
+        </section>
+
+        <script>
+
+            document.getElementById("exploreSchemesBtn").addEventListener("click", function () {
+
+                let message =
+                    "Government Schemes for Farmers:\n\n" +
+                    "1. PM-Kisan Samman Nidhi – ₹6000 yearly support.\n" +
+                    "2. Soil Health Card – Helps farmers know soil quality.\n" +
+                    "3. Crop Insurance – Protection against crop loss.\n" +
+                    "4. Fasal Bima Yojana – Financial help during disasters.";
+
+                alert(message);
+
+            });
+
+        </script>
+
+    </body>
+
+    <!-- MANDI PRICES + CHART -->
+    <section class="container text-center mt-5">
+
+        <h2 style="color:#2e7d32; font-size:35px;">🌾 Punjab Mandi Prices</h2>
+
+        <div style="
+background:#f1f8e9;
+padding:40px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+width:100%;
+">
+
+            <h3>📊 Check Latest Crop Price</h3>
+
+            <select id="cropSelect" style="
+width:60%;
+padding:12px;
+margin-top:15px;
+border-radius:8px;
+border:1px solid #ccc;
+font-size:16px;
+">
+
+                <option value="">🌱 Select Crop</option>
+                <option value="wheat">🌾 Wheat</option>
+                <option value="rice">🍚 Rice</option>
+                <option value="maize">🌽 Maize</option>
+                <option value="cotton">🧵 Cotton</option>
+
+            </select>
+
+            <br>
+
+            <button onclick="showPrice()" style="
+margin-top:20px;
+background:#43a047;
+color:white;
+border:none;
+padding:12px 25px;
+border-radius:8px;
+cursor:pointer;
+font-size:18px;
+">
+
+                Check Mandi Price
+
+            </button>
+
+            <div id="priceCard" style="
+margin-top:30px;
+padding:25px;
+border-radius:12px;
+background:white;
+display:none;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+width:80%;
+margin-left:auto;
+margin-right:auto;
+">
+
+                <p id="priceResult" style="font-size:22px;font-weight:bold;"></p>
+                <p id="priceTrend" style="color:#666;font-size:18px;"></p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <script>
+
+        function showPrice() {
+
+            let crop = document.getElementById("cropSelect").value;
+
+            let price = "";
+            let trend = "";
+
+            if (crop === "wheat") {
+                price = "🌾 Wheat Price: ₹2200 / quintal";
+                trend = "📈 Market Trend: Price Increasing";
+            }
+
+            else if (crop === "rice") {
+                price = "🍚 Rice Price: ₹2100 / quintal";
+                trend = "📉 Market Trend: Stable";
+            }
+
+            else if (crop === "maize") {
+                price = "🌽 Maize Price: ₹1800 / quintal";
+                trend = "📈 Market Trend: High Demand";
+            }
+
+            else if (crop === "cotton") {
+                price = "🧵 Cotton Price: ₹7000 / quintal";
+                trend = "📊 Market Trend: Moderate Demand";
+            }
+
+            else {
+                price = "⚠ Please select a crop";
+                trend = "";
+            }
+
+            document.getElementById("priceCard").style.display = "block";
+
+            document.getElementById("priceResult").innerText = price;
+            document.getElementById("priceTrend").innerText = trend;
+
+        }
+
+    </script>
+    <!-- YIELD ESTIMATION + PROFIT -->
+    <section style="padding:50px;background:#e8f5e9;text-align:center;width:100%;">
+
+        <h2 style="color:#2e7d32;font-size:36px;">📈 Yield & Profit Analysis</h2>
+
+        <div style="
+width:90%;
+margin:auto;
+background:white;
+padding:40px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+">
+
+            <h3 style="font-size:24px;">Calculate Your Farm Profit</h3>
+
+            <input id="land" type="number" placeholder="Land Area (Acres)"
+                style="width:60%;padding:12px;margin:15px;border-radius:8px;border:1px solid #ccc;font-size:16px;">
+
+            <br>
+
+            <select id="crop"
+                style="width:60%;padding:12px;margin:15px;border-radius:8px;border:1px solid #ccc;font-size:16px;">
+
+                <option value="">Select Crop</option>
+                <option value="wheat">🌾 Wheat</option>
+                <option value="rice">🍚 Rice</option>
+                <option value="maize">🌽 Maize</option>
+
+            </select>
+
+            <br>
+
+            <input id="cost" type="number" placeholder="Total Cost (₹)"
+                style="width:60%;padding:12px;margin:15px;border-radius:8px;border:1px solid #ccc;font-size:16px;">
+
+            <br>
+
+            <button onclick="calculateProfit()" style="
+padding:14px 30px;
+background:#43a047;
+color:white;
+border:none;
+border-radius:10px;
+font-size:18px;
+cursor:pointer;
+">
+
+                Calculate Profit
+
+            </button>
+
+            <div id="resultCard" style="
+margin-top:30px;
+padding:30px;
+background:#f1f8e9;
+border-radius:12px;
+display:none;
+width:70%;
+margin-left:auto;
+margin-right:auto;
+box-shadow:0 3px 10px rgba(0,0,0,0.1);
+">
+
+                <p id="yieldResult" style="font-size:22px;font-weight:bold;"></p>
+                <p id="profitResult" style="font-size:22px;font-weight:bold;color:#2e7d32;"></p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <script>
+
+        function calculateProfit() {
+
+            let land = document.getElementById("land").value;
+            let crop = document.getElementById("crop").value;
+            let cost = document.getElementById("cost").value;
+
+            let yieldPerAcre = 0;
+            let price = 0;
+
+            if (crop === "wheat") {
+                yieldPerAcre = 20;
+                price = 2200;
+            }
+
+            else if (crop === "rice") {
+                yieldPerAcre = 22;
+                price = 2100;
+            }
+
+            else if (crop === "maize") {
+                yieldPerAcre = 18;
+                price = 1800;
+            }
+
+            let totalYield = land * yieldPerAcre;
+            let revenue = totalYield * price;
+            let profit = revenue - cost;
+
+            document.getElementById("resultCard").style.display = "block";
+
+            document.getElementById("yieldResult").innerText =
+                "🌾 Estimated Yield: " + totalYield + " quintals";
+
+            document.getElementById("profitResult").innerText =
+                "💰 Estimated Profit: ₹" + profit;
+
+        }
+
+    </script>
+    <!-- CHATBOT (placeholder) & VOICE -->
+    <section style="padding:40px;background:#f3f7ff;text-align:center;">
+
+        <h2 style="color:#2e7d32;font-size:34px;">🤖 Farmer Chat & Voice Assistant</h2>
+
+        <div style="
+width:90%;
+margin:auto;
+background:white;
+padding:30px;
+border-radius:12px;
+box-shadow:0 4px 12px rgba(0,0,0,0.2);
+">
+
+            <h3>Ask Farming Questions</h3>
+
+            <input id="userQuestion" type="text" placeholder="Ask about crops, weather, diseases..."
+                style="width:60%;padding:12px;margin:15px;border-radius:8px;border:1px solid #ccc;font-size:16px;">
+
+            <br>
+
+            <button onclick="getAnswer()" style="
+padding:12px 25px;
+background:#43a047;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+">
+
+                Ask Assistant
+
+            </button>
+
+            <button onclick="startVoice()" style="
+padding:12px 25px;
+background:#1565c0;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+margin-left:10px;
+">
+
+                🎤 Voice Assistant
+
+            </button>
+
+            <div id="chatResult" style="
+margin-top:25px;
+padding:20px;
+background:#e8f5e9;
+border-radius:10px;
+display:none;
+font-size:18px;
+">
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <script>
+
+        function getAnswer() {
+
+            let question = document.getElementById("userQuestion").value.toLowerCase();
+
+            let answer = "";
+
+            if (question.includes("wheat")) {
+                answer = "🌾 Wheat grows best in cool climate with well-drained soil.";
+            }
+
+            else if (question.includes("rice")) {
+                answer = "🍚 Rice requires plenty of water and warm temperature.";
+            }
+
+            else if (question.includes("maize")) {
+                answer = "🌽 Maize needs moderate rainfall and fertile soil.";
+            }
+
+            else if (question.includes("disease")) {
+                answer = "🦠 Common crop diseases include rust, blight, and blast. Use recommended fungicides.";
+            }
+
+            else if (question.includes("weather")) {
+                answer = "🌤 Always check weather before irrigation or sowing crops.";
+            }
+
+            else {
+                answer = "🤖 Sorry, I couldn't understand. Please ask about crops, weather, or diseases.";
+            }
+
+            document.getElementById("chatResult").style.display = "block";
+            document.getElementById("chatResult").innerText = answer;
+
+        }
+
+        function startVoice() {
+
+            let recognition = new webkitSpeechRecognition();
+
+            recognition.onresult = function (event) {
+
+                let voiceText = event.results[0][0].transcript;
+
+                document.getElementById("userQuestion").value = voiceText;
+
+                getAnswer();
+
+            };
+
+            recognition.start();
+
+        }
+
+    </script>
+
+    <!--map directions -->
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Map Example</title>
+
+        <!-- Leaflet CSS goes in HEAD -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    </head>
+
+    <body>
+
+        <h2 style="text-align: center; font-weight: bold;">🧭 Your Nearby Mandi Map</h2>
+
+        <!-- Map container -->
+        <div id="map" style="height:400px;"></div>
+
+        <!-- Leaflet JS should be before closing body -->
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+        <script>
+            var map = L.map('map').setView([30.7333, 76.7794], 10);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '©️ OpenStreetMap'
+            }).addTo(map);
+
+            L.marker([30.7333, 76.7794]).addTo(map)
+                .bindPopup("Nearby Mandi Location")
+                .openPopup();
+        </script>
+
+        <!-- FOOTER -->
+        <footer class="bg-success text-white text-center py-4 mt-5">
+            <p id="footerContact" class="mb-1">📞 Helpline: 1800-180-1551 | ✉ Email: farmerhelpdesk@agriculture.gov.in
+            </p>
+            <p id="footerProject" class="mb-2">🌱 Bytes Buster - Hackathon Project</p>
+            <div class="mb-2">
+                <a href="https://instagram.com" target="_blank" class="mx-2" style="color:#E1306C;"><i
+                        class="fab fa-instagram fa-2x"></i></a>
+                <a href="https://facebook.com" target="_blank" class="mx-2" style="color:#3b5998;"><i
+                        class="fab fa-facebook fa-2x"></i></a>
+                <a href="https://youtube" class="mx-2" style="color:#e31717;"><i class="fab fa-youtube fa-2x"></i></a>
+                <a href="https://linkedin.com" target="_blank" class="mx-2" style="color:#04346a;"><i
+                        class="fab fa-linkedin fa-2x"></i></a>
+                <a href="https://twitter.com" target="_blank" class="mx-2" style="color:#1e85c0d6;"><i
+                        class="fab fa-twitter fa-2x"></i></a>
+            </div>
+            <p class="mb-0" id="footerCopy">©️ Byte | All Rights Reserved</p>
+        </footer>
+        <script>
+
+            // ========== 🌐 Multi-Language Support ==========
+            const translations = {
+                en: {
+                    registerSuccess: "✅ Registration Successful! Welcome, Farmer.",
+                    fertilizerResult: "Fertilizer Requirement",
+                    chatbotReply: "🤖 Our experts will get back to you soon!"
+                },
+                hi: {
+                    registerSuccess: "✅ पंजीकरण सफल! आपका स्वागत है किसान भाई।",
+                    fertilizerResult: "उर्वरक आवश्यकता",
+                    chatbotReply: "🤖 हमारे विशेषज्ञ जल्द ही आपसे संपर्क करेंगे!"
+                },
+                pa: {
+                    registerSuccess: "✅ ਰਜਿਸਟ੍ਰੇਸ਼ਨ ਸਫਲ! ਕਿਸਾਨ ਜੀ, ਤੁਹਾਡਾ ਸੁਆਗਤ ਹੈ।",
+                    fertilizerResult: "ਖਾਦ ਦੀ ਲੋੜ",
+                    chatbotReply: "🤖 ਸਾਡੇ ਮਾਹਰ ਜਲਦੀ ਹੀ ਤੁਹਾਡੇ ਨਾਲ ਸੰਪਰਕ ਕਰਨਗੇ!"
+                },
+                bn: {
+                    registerSuccess: "✅ রেজিস্ট্রেশন সফল! কৃষক ভাই, আপনাকে স্বাগতম।",
+                    fertilizerResult: "সারের প্রয়োজন",
+                    chatbotReply: "🤖 আমাদের বিশেষজ্ঞরা শীঘ্রই আপনার সাথে যোগাযোগ করবেন!"
+                }
+            };
+
+            let currentLang = "en";
+            document.getElementById("langSelect").addEventListener("change", e => {
+                currentLang = e.target.value;
+            });
+
+            // ========== 👨‍🌾 Registration ==========
+            document.getElementById("regForm").addEventListener("submit", e => {
+                e.preventDefault();
+                document.getElementById("regMsg").innerHTML =
+                    translations[currentLang].registerSuccess;
+            });
+
+            // ========== 📊 Mandi Price Chart ==========
+            const mandiCtx = document.getElementById("mandiChart").getContext("2d");
+            new Chart(mandiCtx, {
+                type: "line",
+                data: {
+                    labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+                    datasets: [
+                        { label: "Wheat ₹/q", data: [2200, 2250, 2300, 2280, 2350], borderColor: "green", fill: false },
+                        { label: "Rice ₹/q", data: [2000, 1980, 2020, 2050, 2100], borderColor: "orange", fill: false }
+                    ]
+                }
+            });
+
+            // ========== 🧮 Fertilizer Calculator + Charts ==========
+            const fertData = {
+                Wheat: { Urea: 50, DAP: 25, Potash: 20 },
+                Rice: { Urea: 60, DAP: 30, Potash: 25 },
+                Maize: { Urea: 45, DAP: 20, Potash: 15 },
+                Sugarcane: { Urea: 80, DAP: 40, Potash: 35 }
+            };
+
+            let yieldChart, profitChart;
+
+            document.getElementById("esimateBtn").addEventListener("click", () => {
+                const crop = document.getElementById("calcCrop").value;
+                const area = parseFloat(document.getElementById("landArea").value);
+
+                if (!crop || !area) {
+                    alert("Please select crop and enter area.");
+                    return;
+                }
+
+                const rec = fertData[crop];
+                let resultText = `<b>${translations[currentLang].fertilizerResult} (${crop}, ${area} acres):</b><br>`;
+                for (let [fert, qty] of Object.entries(rec)) {
+                    resultText += `${fert}: ${qty * area} kg<br>`;
+                }
+                document.getElementById("calcResult").innerHTML = resultText;
+
+                const baseYield = { Wheat: 30, Rice: 28, Maize: 35, Sugarcane: 60 };
+                const yieldVal = baseYield[crop] * area;
+
+                if (yieldChart) yieldChart.destroy();
+                yieldChart = new Chart(document.getElementById("yieldChart").getContext("2d"), {
+                    type: "bar",
+                    data: { labels: [crop], datasets: [{ label: "Yield (quintals)", data: [yieldVal], backgroundColor: "green" }] }
+                });
+
+                const pricePerQuintal = { Wheat: 2200, Rice: 2000, Maize: 1800, Sugarcane: 300 };
+                const profitVal = yieldVal * pricePerQuintal[crop];
+
+                if (profitChart) profitChart.destroy();
+                profitChart = new Chart(document.getElementById("profitChart").getContext("2d"), {
+                    type: "line",
+                    data: { labels: ["Profit"], datasets: [{ label: "Profit (₹)", data: [profitVal], borderColor: "blue", fill: false }] }
+                });
+            });
+
+            // ========== 🎙 Voice Assistant ==========
+            document.getElementById("voiceSpeakBtn").addEventListener("click", () => {
+                if (!("webkitSpeechRecognition" in window)) {
+                    alert("Voice recognition not supported in this browser.");
+                    return;
+                }
+                const recognition = new webkitSpeechRecognition();
+                recognition.lang = currentLang === "hi" ? "hi-IN" : "en-US";
+                recognition.start();
+
+                recognition.onresult = e => {
+                    const transcript = e.results[0][0].transcript;
+                    document.getElementById("voiceOutput").innerText = `🎤 You said: ${transcript}`;
+                    let reply = "Sorry, I didn't understand.";
+                    if (transcript.toLowerCase().includes("weather")) reply = "Today is sunny ☀️";
+                    if (transcript.toLowerCase().includes("fertilizer")) reply = "Use Urea and DAP.";
+                    if (transcript.toLowerCase().includes("price")) reply = "Wheat ₹2300/q, Rice ₹2050/q.";
+                    document.getElementById("voiceOutput").innerText += `\n🤖 Assistant: ${reply}`;
+
+                    const synth = window.speechSynthesis;
+                    const utter = new SpeechSynthesisUtterance(reply);
+                    synth.speak(utter);
+                };
+            });
+
+            // ========== 💬 Chatbot ==========
+            document.getElementById("chatAskBtn").addEventListener("click", () => {
+                const q = document.getElementById("chatInput").value;
+                if (!q) return;
+                document.getElementById("chatReply").innerText = translations[currentLang].chatbotReply;
+            });
+
+            // ========== 🦠 Disease Detection (Dummy) ==========
+            document.getElementById("checkDiseaseBtn").addEventListener("click", () => {
+                const crop = document.getElementById("diseaseCrop").value;
+                if (!crop) {
+                    alert("Enter crop name.");
+                    return;
+                }
+                document.getElementById("diseaseResult").innerText = `🦠 Possible disease in ${crop}: Leaf Blight\n💊 Suggested: Carbendazim Spray`;
+            });
+
+
+        </script>
+
+
+
+
+
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="script.js"></script>
+
+
+    </body>
+
+</html>
